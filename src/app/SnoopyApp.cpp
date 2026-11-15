@@ -1,7 +1,8 @@
 #include "SnoopyApp.h"
 #include <Arduino.h>
 
-void SnoopyApp::begin() {
+void SnoopyApp::begin()
+{
     Serial.begin(115200);
 
     Serial.println();
@@ -13,35 +14,60 @@ void SnoopyApp::begin() {
     clock.begin();
 
     animationPlayer.play("/snoopy_typing.gif");
+    encoder.begin();
 }
-
-
 
 void SnoopyApp::update()
 {
+    encoder.update();
+
+    bool shouldWalk = encoder.isTurning();
+
+    if (shouldWalk != walking)
+    {
+        walking = shouldWalk;
+
+        if (walking)
+        {
+            Serial.println("[SnoopyApp] Walking");
+
+            animationPlayer.play(
+                "/snoopy_walk.gif");
+        }
+        else
+        {
+            Serial.println("[SnoopyApp] Idle");
+
+            animationPlayer.play(
+                "/snoopy_typing.gif");
+        }
+    }
+
     animationPlayer.update();
 }
 
-void SnoopyApp::updateScene(TimeOfDay timeOfDay) {
-    switch (timeOfDay) {
-        case TimeOfDay::MORNING:
-            animationPlayer.play("/morning/snoopy.gif");
-            break;
+void SnoopyApp::updateScene(TimeOfDay timeOfDay)
+{
+    switch (timeOfDay)
+    {
+    case TimeOfDay::MORNING:
+        animationPlayer.play("/morning/snoopy.gif");
+        break;
 
-        case TimeOfDay::DAY:
-            animationPlayer.play("/day/snoopy_typing.gif");
-            break;
+    case TimeOfDay::DAY:
+        animationPlayer.play("/day/snoopy_typing.gif");
+        break;
 
-        case TimeOfDay::EVENING:
-            animationPlayer.play("/evening/snoopy.gif");
-            break;
+    case TimeOfDay::EVENING:
+        animationPlayer.play("/evening/snoopy.gif");
+        break;
 
-        case TimeOfDay::NIGHT:
-            animationPlayer.play("/night/snoopy.gif");
-            break;
+    case TimeOfDay::NIGHT:
+        animationPlayer.play("/night/snoopy.gif");
+        break;
 
-        case TimeOfDay::SLEEP:
-            animationPlayer.play("/sleep/snoopy.gif");
-            break;
+    case TimeOfDay::SLEEP:
+        animationPlayer.play("/sleep/snoopy.gif");
+        break;
     }
 }

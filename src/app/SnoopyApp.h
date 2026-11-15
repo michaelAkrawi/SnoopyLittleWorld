@@ -4,6 +4,7 @@
 #include "../time/Clock.h"
 #include "../time/TimeOfDay.h"
 #include "../display/Display.h"
+#include "../input/RotaryEncoder.h"
 
 class SnoopyApp {
 public:
@@ -18,4 +19,8 @@ private:
 
     void updateScene(TimeOfDay timeOfDay);    
     Display display;
+
+    RotaryEncoder encoder;
+
+    bool walking = false;
 };
